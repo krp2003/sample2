@@ -1,1 +1,26 @@
-//doto: complete missing code..
+<div class="assign-container">
+  <h2>Assign Professional</h2>
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="eventId">Event</label>
+      <select id="eventId" formControlName="eventId">
+        <option [ngValue]="null">Select Event</option>
+        <option *ngFor="let event of events" [ngValue]="event.id">
+          {{ event.title || ('Event #' + event.id) }}
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="userId">Professional</label>
+      <select id="userId" formControlName="userId">
+        <option [ngValue]="null">Select Professional</option>
+        <option *ngFor="let pro of professionals" [ngValue]="pro.id">
+          {{ pro.username || pro.name || ('User #' + pro.id) }}
+        </option>
+      </select>
+    </div>
+    <button type="submit" class="primary-btn">Assign Professional</button>
+  </form>
+  <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

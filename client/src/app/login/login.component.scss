@@ -1,3 +1,63 @@
-a{
-    cursor: pointer;
+// Styles for the Login page
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.form-group label {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+.form-group input {
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.primary-btn {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.primary-btn:hover {
+  background-color: #4338ca;
+}
+
+.error-message {
+  color: #dc2626;
+  margin-top: 0.75rem;
+}
+
+.register-link {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.register-link a {
+  color: #4f46e5;
+  text-decoration: underline;
+  cursor: pointer;
 }

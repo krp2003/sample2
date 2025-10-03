@@ -15,40 +15,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+
+@RestController
 public class InstitutionController {
 
+    @Autowired private EventService eventService;
+    @Autowired private ResourceService resourceService;
+    @Autowired private UserService userService;
 
-
-    // Create Event
     @PostMapping("/api/institution/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
-        // create event
+        return ResponseEntity.ok(eventService.create(event));
     }
 
-    // Update Event
     @PutMapping("/api/institution/event/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event eventDetails) {
-        // update event
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event updatedEvent) {
+        return ResponseEntity.ok(eventService.update(id, updatedEvent));
     }
 
-    // Get Events
     @GetMapping("/api/institution/events")
-    public ResponseEntity<List<Event>> getInstitutionsEvents(@RequestParam Long institutionId) {
-        // get events of institution
+    public ResponseEntity<List<Event>> getEvents(@RequestParam Long institutionId) {
+        return ResponseEntity.ok(eventService.getForInstitution(institutionId));
     }
 
     @PostMapping("/api/institution/event/{eventId}/resource")
     public ResponseEntity<Resource> addResourceToEvent(@PathVariable Long eventId, @RequestBody Resource resource) {
-        // add resource to event
+        return ResponseEntity.ok(resourceService.addToEvent(eventId, resource));
     }
 
     @GetMapping("/api/institution/event/professionals")
     public ResponseEntity<List<User>> getProfessionalsList() {
-      // get professionals list
+        return ResponseEntity.ok(userService.getProfessionals());
     }
 
     @PostMapping("/api/institution/event/{eventId}/professional")
     public ResponseEntity<?> assignProfessionalToEvent(@PathVariable Long eventId, @RequestParam Long userId) {
-     // assign professional to event
+        return ResponseEntity.ok(eventService.assignProfessional(eventId, userId));
     }
 }

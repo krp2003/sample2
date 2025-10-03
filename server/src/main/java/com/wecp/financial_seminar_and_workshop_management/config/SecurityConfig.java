@@ -1,40 +1,95 @@
 package com.wecp.financial_seminar_and_workshop_management.config;
 
-import com.wecp.financial_seminar_and_workshop_management.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.wecp.financial_seminar_and_workshop_management.jwt.JwtRequestFilter;
+import com.wecp.financial_seminar_and_workshop_management.service.UserService;
 
-public class SecurityConfig{
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
 
-    // Implement security configuration here
-    // /api/user/register and /api/user/login should be permitted to all
-    // /api/institution/event should be permitted to INSTITUTION
-    // /api/institution/event/{id} should be permitted to INSTITUTION
-    // /api/institution/events should be permitted to INSTITUTION
-    // /api/institution/event/{eventId}/resource should be permitted to INSTITUTION
-    // /api/institution/event/professionals should be permitted to INSTITUTION
-    // /api/institution/event/{eventId}/professional should be permitted to INSTITUTION
-    // /api/professional/events should be permitted to PROFESSIONAL
-    // /api/professional/event/{id}/status should be permitted to PROFESSIONAL
-    // /api/professional/event/{eventId}/feedback should be permitted to PROFESSIONAL
-    // /api/participant/events should be permitted to PARTICIPANT
-    // /api/participant/event/{eventId}/enroll should be permitted to PARTICIPANT
-    // /api/participant/event/{id}/status should be permitted to PARTICIPANT
-    // /api/participant/event/{eventId}/feedback should be permitted to PARTICIPANT
+    @Autowired
+    private JwtRequestFilter authFilter;
 
-    // Note: Use hasAuthority method to check the role of the user
-    // for example, hasAuthority("INSTITUTION")
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserService();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.cors().and().csrf().disable()
+            .authorizeRequests()
+            // Public endpoints
+            .antMatchers("/api/user/login").permitAll()
+            .antMatchers("/api/user/register").permitAll()
+
+            // Institution endpoints
+            .antMatchers(HttpMethod.POST, "/api/institution/event").hasAuthority("institution")
+            .antMatchers(HttpMethod.PUT, "/api/institution/event/**").hasAuthority("institution")
+            .antMatchers(HttpMethod.POST, "/api/institution/event/**/resource").hasAuthority("institution")
+            .antMatchers(HttpMethod.POST, "/api/institution/event/**/professional").hasAuthority("institution")
+            .antMatchers(HttpMethod.GET, "/api/institution/events").hasAuthority("institution")
+            .antMatchers(HttpMethod.GET, "/api/institution/event/professionals").hasAuthority("institution")
+
+            // Professional endpoints
+            .antMatchers(HttpMethod.GET, "/api/professional/events").hasAuthority("PROFESSIONAL")
+            .antMatchers(HttpMethod.PUT, "/api/professional/event/**/status").hasAuthority("PROFESSIONAL")
+            .antMatchers(HttpMethod.POST, "/api/professional/event/**/feedback").hasAuthority("PROFESSIONAL")
+
+            // Participant endpoints
+            .antMatchers(HttpMethod.GET, "/api/participant/events").hasAnyAuthority("participant","institution")
+            .antMatchers(HttpMethod.GET, "/api/participant/event/**/status").hasAuthority("PARTICIPANT")
+            .antMatchers(HttpMethod.POST, "/api/participant/event/**/enroll").hasAuthority("PARTICIPANT")
+
+            // Finance endpoints
+            .antMatchers(HttpMethod.GET, "/api/finance/events").hasAnyAuthority("institution", "participant", "professional")
+
+            // All other API requests require authentication
+            .antMatchers("/api/**").authenticated()
+
+            .and()
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoders() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoders());
+        return authenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 }

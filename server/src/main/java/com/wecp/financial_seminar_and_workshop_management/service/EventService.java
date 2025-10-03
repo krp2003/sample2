@@ -12,8 +12,54 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Service
 public class EventService {
 
-    // implement service methods here
+    @Autowired private EventRepository eventRepository;
+    @Autowired private UserRepository userRepository;
 
+    public Event create(Event event) {
+        return eventRepository.save(event);
+    }
+
+    public Event update(Long id, Event updated) {
+        Event e = eventRepository.findById(id).orElseThrow();
+        e.setTitle(updated.getTitle());
+        e.setDescription(updated.getDescription());
+        e.setSchedule(updated.getSchedule());
+        e.setLocation(updated.getLocation());
+        e.setStatus(updated.getStatus());
+        return eventRepository.save(e);
+    }
+
+    public List<Event> getForInstitution(Long institutionId) {
+        return eventRepository.findByInstitutionIdOrderByIdAsc(institutionId);
+    }
+
+    public List<Event> getAllOrdered() {
+        return eventRepository.findAllByOrderByIdAsc();
+    }
+
+    public List<Event> getForProfessional(Long userId) {
+        return eventRepository.findByProfessionals_IdOrderByIdAsc(userId);
+    }
+
+    public Event assignProfessional(Long eventId, Long userId) {
+        Event e = eventRepository.findById(eventId).orElseThrow();
+        User u = userRepository.findById(userId).orElseThrow();
+        if (!e.getProfessionals().contains(u)) {
+            e.getProfessionals().add(u);
+        }
+        return eventRepository.save(e);
+    }
+
+    public Event getById(Long id) {
+        return eventRepository.findById(id).orElseThrow();
+    }
+
+    public Event updateStatus(Long id, String status) {
+        Event e = eventRepository.findById(id).orElseThrow();
+        e.setStatus(status);
+        return eventRepository.save(e);
+    }
 }

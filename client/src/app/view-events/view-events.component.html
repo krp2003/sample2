@@ -1,1 +1,33 @@
-//doto: complete missing code..
+<div class="events-container">
+  <h2>All Events</h2>
+  <!-- Display any error from loading events -->
+  <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <!-- Events Table -->
+  <table class="events-table" *ngIf="events.length">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let event of events">
+        <td>{{ event.title }}</td>
+        <td>{{ event.schedule | date: 'mediumDate' }}</td>
+        <td>{{ event.location }}</td>
+        <td>
+          <button (click)="checkStatus(event.id)" class="secondary-btn">
+            Check Status
+          </button>
+          <button (click)="enroll(event.id)" class="primary-btn">Enroll</button>
+          <div class="status-text" *ngIf="statusResults[event.id]">
+            {{ statusResults[event.id] }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!events.length && !errorMessage">No events available.</p>
+</div>

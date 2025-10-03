@@ -14,27 +14,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+@RestController
 public class ParticipantController {
 
-
+    @Autowired private EventService eventService;
+    @Autowired private EnrollmentService enrollmentService;
+    @Autowired private FeedbackService feedbackService;
 
     @GetMapping("/api/participant/events")
-    public ResponseEntity<List<Event>> getEvents() {
-        // Get all events
+    public ResponseEntity<List<Event>> getAllEvents() {
+        return ResponseEntity.ok(eventService.getAllOrdered());
     }
 
     @PostMapping("/api/participant/event/{eventId}/enroll")
     public ResponseEntity<Enrollment> enrollInEvent(@RequestParam Long userId, @PathVariable Long eventId) {
-     // Enroll in event
+        return ResponseEntity.ok(enrollmentService.enroll(userId, eventId));
     }
 
     @GetMapping("/api/participant/event/{id}/status")
     public ResponseEntity<Event> viewEventStatus(@PathVariable Long id) {
-        // view event by event id
+        return ResponseEntity.ok(eventService.getById(id));
     }
 
     @PostMapping("/api/participant/event/{eventId}/feedback")
-    public ResponseEntity<Feedback> provideFeedback(@RequestParam Long userId, @PathVariable Long eventId, @RequestBody Feedback feedback) {
-        // Provide feedback for event
+    public ResponseEntity<Feedback> provideFeedback(@RequestParam Long userId,
+                                                    @PathVariable Long eventId,
+                                                    @RequestBody Feedback feedback) {
+        return ResponseEntity.ok(feedbackService.addFeedback(userId, eventId, feedback));
     }
 }

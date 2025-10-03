@@ -1,0 +1,36 @@
+// Styles for the Dashboard page
+.dashboard-container {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  margin-bottom: 2rem;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.link-card {
+  display: block;
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: #1f2937;
+  font-weight: 500;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.link-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}

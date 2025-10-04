@@ -51,14 +51,14 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.GET, "/api/institution/event/professionals").hasAuthority("institution")
 
             // Professional endpoints
-            .antMatchers(HttpMethod.GET, "/api/professional/events").hasAuthority("PROFESSIONAL")
-            .antMatchers(HttpMethod.PUT, "/api/professional/event/**/status").hasAuthority("PROFESSIONAL")
-            .antMatchers(HttpMethod.POST, "/api/professional/event/**/feedback").hasAuthority("PROFESSIONAL")
+            .antMatchers(HttpMethod.GET, "/api/professional/events").hasAnyAuthority("professional")
+            .antMatchers(HttpMethod.PUT, "/api/professional/event/**/status").hasAnyAuthority("professional", "institution")
+            .antMatchers(HttpMethod.POST, "/api/professional/event/**/feedback").hasAuthority("professional")
 
             // Participant endpoints
             .antMatchers(HttpMethod.GET, "/api/participant/events").hasAnyAuthority("participant","institution")
-            .antMatchers(HttpMethod.GET, "/api/participant/event/**/status").hasAuthority("PARTICIPANT")
-            .antMatchers(HttpMethod.POST, "/api/participant/event/**/enroll").hasAuthority("PARTICIPANT")
+            .antMatchers(HttpMethod.GET, "/api/participant/event/**/status").hasAuthority("participant")
+            .antMatchers(HttpMethod.POST, "/api/participant/event/**/enroll").hasAuthority("participant")
 
             // Finance endpoints
             .antMatchers(HttpMethod.GET, "/api/finance/events").hasAnyAuthority("institution", "participant", "professional")

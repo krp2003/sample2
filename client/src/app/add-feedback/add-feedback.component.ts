@@ -61,7 +61,7 @@ export class AddFeedbackComponent implements OnInit {
     // Load the list of events. For simplicity, we fetch all events for
     // institution ID 1, but this could be replaced with a more specific
     // endpoint if available.
-    this.httpService.getEventByInstitutionId(1).subscribe({
+    this.httpService.GetAllevents().subscribe({
       next: (res: any) => (this.events = res || []),
       error: () => (this.errorMessage = 'Failed to load events')
     });

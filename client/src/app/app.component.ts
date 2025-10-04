@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
   IsLoggin:any=false;
   roleName: string | null;
-  constructor(private authService: AuthService, private router:Router)
+  constructor(public authService: AuthService, private router:Router)
   {
    
     this.IsLoggin=authService.getLoginStatus;

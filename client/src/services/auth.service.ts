@@ -40,7 +40,7 @@ export class AuthService {
     this.token = null;
   }
 
-  get getLoginStatus(): boolean {
+  getLoginStatus(): boolean {
     try { return !!localStorage.getItem('token'); } catch { return false; }
   }
 }

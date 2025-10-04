@@ -4,14 +4,17 @@
         <span class="brand">Finovent</span>
         <ul class="nav-links">
             <li><a routerLink="/dashboard">Dashboard</a></li>
-            <li><a routerLink="/create-event">Create Event</a></li>
+            <li *ngIf="!authService.hasAnyRole('professional', 'participant')"><a routerLink="/create-event">Create Event</a></li>
             <li><a routerLink="/add-resource">Add Resource</a></li>
-            <li><a routerLink="/assign-professional">Assign Professional</a></li>
-            <li><a routerLink="/update-event-status">Update Status</a></li>
-            <li><a routerLink="/add-feedback">Add Feedback</a></li>
+            <li *ngIf="!authService.hasAnyRole('professional', 'participant')"><a routerLink="/assign-professional">Assign Professional</a></li>
+            <li *ngIf="!authService.hasAnyRole('participant')"><a routerLink="/update-event-status">Update Status</a></li>
+            <li *ngIf="authService.hasAnyRole('participant')"><a routerLink="/add-feedback">Add Feedback</a></li>
             <li><a routerLink="/view-events">View Events</a></li>
         </ul>
-        <button class="logout-btn" (click)="logout()">Logout</button>
+        <button *ngIf="authService.getLoginStatus()" class="logout-btn" (click)="logout()">Logout</button>
+        <button *ngIf="!authService.getLoginStatus()" routerLink="/login" class="login-btn">Login</button>
+        
+        <button *ngIf="!authService.getLoginStatus()" routerLink="/registration" class="register">Register</button>
     </div>
 </nav>
 

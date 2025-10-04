@@ -9,7 +9,7 @@
         <th>Title</th>
         <th>Date</th>
         <th>Location</th>
-        <th>Actions</th>
+        <th *ngIf="!authService.hasAnyRole('professional')">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -17,7 +17,7 @@
         <td>{{ event.title }}</td>
         <td>{{ event.schedule | date: 'mediumDate' }}</td>
         <td>{{ event.location }}</td>
-        <td>
+        <td *ngIf="!authService.isRole('professional')">
           <button (click)="checkStatus(event.id)" class="secondary-btn">
             Check Status
           </button>

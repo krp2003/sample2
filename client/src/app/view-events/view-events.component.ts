@@ -24,15 +24,23 @@ export class ViewEventsComponent implements OnInit {
   /** Error message displayed when loading events fails. */
   errorMessage = '';
 
-  constructor(private httpService: HttpService, private authService: AuthService) {}
+  constructor(private httpService: HttpService, public authService: AuthService) {}
 
   ngOnInit(): void {
     // Load all events available to participants. This uses the participant
     // endpoint, but you can replace with a different endpoint if needed.
-    this.httpService.GetAllevents().subscribe({
-      next: (res: any) => (this.events = res || []),
-      error: () => (this.errorMessage = 'Failed to load events')
-    });
+
+    if(localStorage.getItem('role') === 'professional') {
+      this.httpService.getEventByProfessional(localStorage.getItem('userId')).subscribe({
+        next: (res: any) => (this.events = res || []),
+        error: () => (this.errorMessage = 'Failed to load events')
+      });
+    } else {
+      this.httpService.GetAllevents().subscribe({
+        next: (res: any) => (this.events = res || []),
+        error: () => (this.errorMessage = 'Failed to load events')
+      });
+    }
   }
 
   /**

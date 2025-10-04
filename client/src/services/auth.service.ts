@@ -18,10 +18,17 @@ export class AuthService {
   SetRole(role: any) {
     localStorage.setItem('role', role);
   }
-  get getRole(): string | null {
+  getRole(): string | null {
     return localStorage.getItem('role');
   }
 
+  isRole(role: string): boolean {
+    return this.getRole() === role;
+  }
+  hasAnyRole(...roles: string[]): boolean {
+    const current = this.getRole();
+    return current ? roles.includes(current): false;
+  }
   SetUsername(username: any) {
     localStorage.setItem('username', username);
   }

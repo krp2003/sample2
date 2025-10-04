@@ -39,7 +39,7 @@ export class UpdateEventStatusComponent implements OnInit {
     });
 
     // Load events (for simplicity we fetch by institution ID; change as needed)
-    this.httpService.getEventByInstitutionId(localStorage.getItem('userId')).subscribe({
+    this.httpService.getEventByProfessional(localStorage.getItem('userId')).subscribe({
       next: (res: any) => (this.events = res || []),
       error: () => (this.errorMessage = 'Failed to load events')
     });

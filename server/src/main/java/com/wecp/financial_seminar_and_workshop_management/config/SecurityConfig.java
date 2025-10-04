@@ -57,7 +57,7 @@ public class SecurityConfig {
 
             // Participant endpoints
             .antMatchers(HttpMethod.GET, "/api/participant/events").hasAnyAuthority("participant","institution")
-            .antMatchers(HttpMethod.GET, "/api/participant/event/**/status").hasAuthority("participant")
+            .antMatchers(HttpMethod.GET, "/api/participant/event/**/status").hasAnyAuthority("participant", "institution")
             .antMatchers(HttpMethod.POST, "/api/participant/event/**/enroll").hasAuthority("participant")
 
             // Finance endpoints

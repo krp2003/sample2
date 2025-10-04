@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
         console.log(res.token);
                       if(res.userId) {
                         localStorage.setItem('userId', res.userId.toString());
+                        localStorage.setItem('role', res.role);
                       }
                       this.router.navigateByUrl("/dashboard")},
       error: () => (this.errorMessage = 'Invalid username or password'),
